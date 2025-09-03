@@ -1,7 +1,7 @@
-export default function HomePage() {
+export default function CreateEventPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-      <h1>Welcome to the Event Management System</h1>
+      Create Event
     </div>
   );
 }
