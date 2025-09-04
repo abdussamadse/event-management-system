@@ -1,5 +1,5 @@
-import SearchFilter from "@/components/SearchFilter";
-import EventList from "@/components/EventList";
+import SearchFilter from "@/components/home/SearchFilter";
+import EventList from "@/components/home/EventList";
 
 export default function HomePage() {
   return (

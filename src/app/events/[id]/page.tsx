@@ -3,6 +3,7 @@
 import { useEventStore } from "@/stores/eventStore";
 import { Event } from "@/types/event";
 import { Calendar, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface EventDetailsProps {
   params: {
@@ -11,8 +12,21 @@ interface EventDetailsProps {
 }
 
 export default function EventDetails({ params }: EventDetailsProps) {
-  const events: Event[] = useEventStore((state) => state.events);
-  const event = events.find((e) => e.id === params.id);
+  const storeEvents: Event[] = useEventStore((state) => state.events);
+  const [event, setEvent] = useState<Event | undefined>(
+    storeEvents.find((e) => e.id === params.id)
+  );
+
+  // Check localStorage if not found in store
+  useEffect(() => {
+    if (!event) {
+      const storedEvents: Event[] = JSON.parse(
+        localStorage.getItem("myEvents") || "[]"
+      );
+      const foundEvent = storedEvents.find((e) => e.id === params.id);
+      if (foundEvent) setEvent(foundEvent);
+    }
+  }, [event, params.id]);
 
   if (!event) {
     return (
