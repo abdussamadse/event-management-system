@@ -38,8 +38,8 @@ export const useEventStore = create<EventStore>((set, get) => ({
       if (!res.ok) throw new Error("Failed to fetch events");
       const data: Event[] = await res.json();
       set({ events: data, loading: false });
-    } catch (err: any) {
-      set({ error: err.message, loading: false });
+    } catch (err) {
+      set({ error: (err as Error).message, loading: false });
     }
   },
 
@@ -55,8 +55,8 @@ export const useEventStore = create<EventStore>((set, get) => ({
       if (!res.ok) throw new Error("Failed to add event");
       const newEvent: Event = await res.json();
       set({ events: [...get().events, newEvent], loading: false });
-    } catch (err: any) {
-      set({ error: err.message, loading: false });
+    } catch (err) {
+      set({ error: (err as Error).message, loading: false });
     }
   },
 
@@ -75,8 +75,8 @@ export const useEventStore = create<EventStore>((set, get) => ({
         events: get().events.map((e) => (e.id === updated.id ? updated : e)),
         loading: false,
       });
-    } catch (err: any) {
-      set({ error: err.message, loading: false });
+    } catch (err) {
+      set({ error: (err as Error).message, loading: false });
     }
   },
 
@@ -91,8 +91,8 @@ export const useEventStore = create<EventStore>((set, get) => ({
         events: get().events.filter((e) => e.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      set({ error: err.message, loading: false });
+    } catch (err) {
+      set({ error: (err as Error).message, loading: false });
     }
   },
 }));

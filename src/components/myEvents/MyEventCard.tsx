@@ -38,6 +38,7 @@ export default function MyEventCard({ event }: EventCardProps) {
           showConfirmButton: false,
         });
       } catch (err) {
+        console.error("Delete event failed:", err);
         Swal.fire({
           title: "Error!",
           text: "Something went wrong while deleting.",

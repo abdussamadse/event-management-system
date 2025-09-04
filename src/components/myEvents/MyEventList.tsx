@@ -22,13 +22,6 @@ export default function MyEvents() {
     ? events.filter((event) => event.userId === userId)
     : [];
 
-  // Handle delete (removes from store, not just state)
-  const handleDelete = (id: string) => {
-    useEventStore.setState({
-      events: events.filter((event) => event.id !== id),
-    });
-  };
-
   if (loading) return <p className="text-gray-500">Loading your events...</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!myEvents.length)
@@ -37,7 +30,7 @@ export default function MyEvents() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {myEvents.map((event) => (
-        <MyEventCard key={event.id} event={event} onDelete={handleDelete} />
+        <MyEventCard key={event.id} event={event} />
       ))}
     </div>
   );
