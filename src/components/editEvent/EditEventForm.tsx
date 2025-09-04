@@ -1,15 +1,8 @@
 "use client";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
-interface EventFormData {
-  id?: string; // optional for new events
-  title: string;
-  description: string;
-  date: string;
-  location: string;
-  category: string;
-}
+import { useEventStore } from "@/stores/eventStore";
+import { Event } from "@/types/event";
 
 interface EventFormProps {
   existingEventId?: string; // pass for edit mode
@@ -17,26 +10,29 @@ interface EventFormProps {
 
 export default function EditEventForm({ existingEventId }: EventFormProps) {
   const router = useRouter();
-  const [formData, setFormData] = useState<EventFormData>({
+  const { events, updateEvent, addEvent } = useEventStore();
+
+  const [formData, setFormData] = useState<Event>({
+    id: "",
     title: "",
     description: "",
     date: "",
     location: "",
     category: "",
+    userId: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load event if editing
+  // Load event from global state if editing
   useEffect(() => {
     if (existingEventId) {
-      const storedEvents: EventFormData[] = JSON.parse(
-        localStorage.getItem("myEvents") || "[]"
-      );
-      const eventToEdit = storedEvents.find((e) => e.id === existingEventId);
-      if (eventToEdit) setFormData(eventToEdit);
+      const eventToEdit = events.find((e) => e.id === existingEventId);
+      if (eventToEdit) {
+        setFormData(eventToEdit);
+      }
     }
-  }, [existingEventId]);
+  }, [existingEventId, events]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,34 +40,27 @@ export default function EditEventForm({ existingEventId }: EventFormProps) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const storedEvents: EventFormData[] = JSON.parse(
-      localStorage.getItem("myEvents") || "[]"
-    );
-
-    let updatedEvents: EventFormData[];
-
-    if (formData.id) {
-      // Update existing
-      updatedEvents = storedEvents.map((ev) =>
-        ev.id === formData.id ? formData : ev
-      );
-    } else {
-      // New event
-      const newEvent = { ...formData, id: Date.now().toString() };
-      updatedEvents = [...storedEvents, newEvent];
+    // Ensure userId exists
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = crypto.randomUUID();
+      localStorage.setItem("userId", userId);
     }
 
-    localStorage.setItem("myEvents", JSON.stringify(updatedEvents));
+    if (formData.id) {
+      // Update existing event
+      await updateEvent({ ...formData, userId });
+    } else {
+      // Add new event
+      await addEvent({ ...formData, userId });
+    }
 
-    // Simulate realistic delay
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/my-events");
-    }, 500);
+    setIsLoading(false);
+    router.push("/my-events");
   };
 
   return (

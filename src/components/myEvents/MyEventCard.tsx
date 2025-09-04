@@ -3,14 +3,15 @@ import { useRouter } from "next/navigation";
 import { Event } from "@/types/event";
 import { Edit2, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
+import { useEventStore } from "@/stores/eventStore";
 
 interface EventCardProps {
   event: Event;
-  onDelete?: (id: string) => void;
 }
 
-export default function MyEventCard({ event, onDelete }: EventCardProps) {
+export default function MyEventCard({ event }: EventCardProps) {
   const router = useRouter();
+  const deleteEvent = useEventStore((s) => s.deleteEvent);
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -26,21 +27,24 @@ export default function MyEventCard({ event, onDelete }: EventCardProps) {
     });
 
     if (result.isConfirmed) {
-      const storedEvents: Event[] = JSON.parse(
-        localStorage.getItem("myEvents") || "[]"
-      );
-      const updatedEvents = storedEvents.filter((e) => e.id !== event.id);
-      localStorage.setItem("myEvents", JSON.stringify(updatedEvents));
+      try {
+        await deleteEvent(event.id);
 
-      Swal.fire({
-        title: "Deleted!",
-        text: "The event has been deleted.",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
-      });
-
-      if (onDelete) onDelete(event.id); // Update parent state
+        Swal.fire({
+          title: "Deleted!",
+          text: "The event has been deleted.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      } catch (err) {
+        Swal.fire({
+          title: "Error!",
+          text: "Something went wrong while deleting.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
     }
   };
 

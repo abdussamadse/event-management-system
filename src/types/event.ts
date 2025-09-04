@@ -5,4 +5,5 @@ export interface Event {
   date: string;
   location: string;
   category: string;
+  userId: string;
 }

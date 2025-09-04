@@ -1,9 +1,11 @@
 "use client";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEventStore } from "@/stores/eventStore";
 
+// Event form fields (store handles `id`)
 interface EventFormData {
-  id?: string; // optional for new events
+  userId: string;
   title: string;
   description: string;
   date: string;
@@ -11,35 +13,33 @@ interface EventFormData {
   category: string;
 }
 
-// Props to support editing existing event
-interface EventFormProps {
-  existingEventId?: string;
-}
+// Simple UUID generator (browser-friendly)
+const generateId = () =>
+  crypto.randomUUID?.() || Math.random().toString(36).substring(2, 12);
 
-export default function EventForm({ existingEventId }: EventFormProps) {
+export default function EventForm() {
   const router = useRouter();
+  const addEvent = useEventStore((s) => s.addEvent); // ✅ use store action
+
   const [formData, setFormData] = useState<EventFormData>({
+    userId: "",
     title: "",
     description: "",
     date: "",
     location: "",
     category: "",
   });
-
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load existing event if editing
+  // Ensure a persistent userId in localStorage
   useEffect(() => {
-    if (existingEventId) {
-      const storedEvents: EventFormData[] = JSON.parse(
-        localStorage.getItem("myEvents") || "[]"
-      );
-      const eventToEdit = storedEvents.find((e) => e.id === existingEventId);
-      if (eventToEdit) {
-        setFormData(eventToEdit);
-      }
+    let storedId = localStorage.getItem("userId");
+    if (!storedId) {
+      storedId = generateId();
+      localStorage.setItem("userId", storedId);
     }
-  }, [existingEventId]);
+    setFormData((prev) => ({ ...prev, userId: storedId! }));
+  }, []);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -47,33 +47,18 @@ export default function EventForm({ existingEventId }: EventFormProps) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const storedEvents: EventFormData[] = JSON.parse(
-      localStorage.getItem("myEvents") || "[]"
-    );
-
-    let updatedEvents: EventFormData[];
-
-    if (formData.id) {
-      // Editing existing event
-      updatedEvents = storedEvents.map((ev) =>
-        ev.id === formData.id ? formData : ev
-      );
-    } else {
-      // Creating new event
-      const newEvent = { ...formData, id: Date.now().toString() };
-      updatedEvents = [...storedEvents, newEvent];
-    }
-
-    localStorage.setItem("myEvents", JSON.stringify(updatedEvents));
-
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await addEvent(formData); // ✅ call store instead of manual fetch
       router.push("/my-events");
-    }, 500); // realistic delay
+    } catch (err) {
+      console.error("Failed to create event", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -95,7 +80,6 @@ export default function EventForm({ existingEventId }: EventFormProps) {
         className="border border-gray-400 outline-none p-2 w-full rounded"
         required
       />
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <input
           type="date"
@@ -124,7 +108,6 @@ export default function EventForm({ existingEventId }: EventFormProps) {
           required
         />
       </div>
-
       <div className="flex justify-end">
         <button
           type="submit"
@@ -154,8 +137,6 @@ export default function EventForm({ existingEventId }: EventFormProps) {
                 d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
               ></path>
             </svg>
-          ) : formData.id ? (
-            "Update"
           ) : (
             "Save"
           )}
