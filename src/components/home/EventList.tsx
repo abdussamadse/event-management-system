@@ -3,6 +3,7 @@
 import { useEventStore } from "@/stores/eventStore";
 import { useFilteredEvents } from "@/hooks/useFilteredEvents";
 import EventCard from "./EventCard";
+import EventCardSkeleton from "./EventCardSkeleton";
 import { useEffect } from "react";
 
 export default function EventList() {
@@ -15,7 +16,16 @@ export default function EventList() {
     fetchEvents();
   }, [fetchEvents]);
 
-  if (loading) return <p className="text-gray-500">Loading events...</p>;
+  if (loading) {
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <EventCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!events.length) return <p className="text-gray-500">No events found.</p>;
 

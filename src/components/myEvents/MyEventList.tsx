@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useEventStore } from "@/stores/eventStore";
 import MyEventCard from "./MyEventCard";
 import { Event } from "@/types/event";
+import MyEventCardSkeleton from "./MyEventCardSkeleton";
 
 export default function MyEvents() {
   const fetchEvents = useEventStore((s) => s.fetchEvents);
@@ -22,7 +23,16 @@ export default function MyEvents() {
     ? events.filter((event) => event.userId === userId)
     : [];
 
-  if (loading) return <p className="text-gray-500">Loading your events...</p>;
+  if (loading) {
+    return (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <MyEventCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!myEvents.length)
     return <p className="text-gray-500">You have no events yet.</p>;
