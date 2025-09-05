@@ -17,8 +17,6 @@ Users can view, create, edit, delete, search, and RSVP to events.
 
 🙋 RSVP System: Toggle RSVP (attend/cancel) with live attendee count
 
-❤️ My RSVPs: See all events you RSVP’d to
-
 🎨 Responsive design with Tailwind CSS
 
 🛠 Tech Stack
@@ -34,65 +32,12 @@ Tailwind CSS
 
 localStorage – Data persistence (events & RSVPs)
 
-📂 Project Structure
-event-management/
-│── src/
-│   ├── app/                        # Next.js App Router
-│   │   ├── create-event/           # Create event page
-│   │   │   └── page.tsx
-│   │   ├── edit-event/[id]/        # Edit event page
-│   │   │   └── page.tsx
-│   │   ├── events/[id]/            # Event details page
-│   │   │   └── page.tsx
-│   │   ├── my-events/              # Manage created events
-│   │   │   ├── layout.tsx
-│   │   │   └── page.tsx
-│   │   ├── globals.css             # Global styles
-│   │   └── page.tsx                # Home (all events + search/filter)
-│   │
-│   ├── components/                 # Reusable UI components
-│   │   ├── common/
-│   │   │   └── Header.tsx
-│   │   ├── createEvent/
-│   │   │   └── EventForm.tsx
-│   │   ├── editEvent/
-│   │   │   └── EditEventForm.tsx
-│   │   ├── home/
-│   │   │   ├── EventCard.tsx
-│   │   │   ├── EventCardSkeleton.tsx
-│   │   │   ├── EventList.tsx
-│   │   │   └── SearchFilter.tsx
-│   │   └── myEvents/
-│   │       ├── MyEventCard.tsx
-│   │       ├── MyEventCardSkeleton.tsx
-│   │       └── MyEventList.tsx
-│   │
-│   ├── hooks/
-│   │   └── useFilteredEvents.ts    # Custom hooks
-│   │
-│   ├── lib/
-│   │   └── events.json             # Default system events
-│   │
-│   ├── stores/
-│   │   └── eventStore.ts           # State management
-│   │
-│   ├── types/
-│   │   └── event.ts                # Type definitions
-│   │
-│   └── utils/
-│       └── localEvents.ts          # LocalStorage utilities
-│
-│── .gitignore
-│── eslint.config.mjs
-│── package.json
-│── README.md
-
 ⚙️ Installation
 
 Clone the repo and install dependencies:
 
-git clone https://github.com/your-username/event-management.git
-cd event-management
+git clone https://github.com/abdussamadse/event-management-system.git
+cd event-management-system
 npm install
 
 ▶️ Running Locally
@@ -116,8 +61,6 @@ Create Event → Navigate to /create-event, fill the form, and save.
 My Events → View, edit, or delete events you created.
 
 RSVP → Click RSVP on any event to attend. Click again to cancel.
-
-My RSVPs → View all events you RSVP’d to at /my-rsvps.
 
 📦 Deployment
 
