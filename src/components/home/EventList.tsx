@@ -30,10 +30,13 @@ export default function EventList() {
   if (!events.length) return <p className="text-gray-500">No events found.</p>;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} />
-      ))}
-    </div>
+    <>
+      <h2 className="text-xl font-bold">Upcoming Events</h2>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {events.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </div>
+    </>
   );
 }
