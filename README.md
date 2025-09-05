@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🎉 Event Management System
 
-## Getting Started
+A mini event management app built with Next.js.
+Users can view, create, edit, delete, search, and RSVP to events.
 
-First, run the development server:
+🚀 Features
 
-```bash
+🏠 Home Page: View all events (system + user-created)
+
+🔍 Search & Filter: Find events by title or category
+
+📄 Event Details: View full event information
+
+✏️ Create Event: Add new events (saved in localStorage)
+
+🗂 My Events: Manage your created events (edit & delete)
+
+🙋 RSVP System: Toggle RSVP (attend/cancel) with live attendee count
+
+❤️ My RSVPs: See all events you RSVP’d to
+
+🎨 Responsive design with Tailwind CSS
+
+🛠 Tech Stack
+
+Next.js
+ – React framework for SSR & routing
+
+React
+ – UI components
+
+Tailwind CSS
+ – Styling
+
+localStorage – Data persistence (events & RSVPs)
+
+📂 Project Structure
+event-management/
+│── src/
+│   ├── app/                        # Next.js App Router
+│   │   ├── create-event/           # Create event page
+│   │   │   └── page.tsx
+│   │   ├── edit-event/[id]/        # Edit event page
+│   │   │   └── page.tsx
+│   │   ├── events/[id]/            # Event details page
+│   │   │   └── page.tsx
+│   │   ├── my-events/              # Manage created events
+│   │   │   ├── layout.tsx
+│   │   │   └── page.tsx
+│   │   ├── globals.css             # Global styles
+│   │   └── page.tsx                # Home (all events + search/filter)
+│   │
+│   ├── components/                 # Reusable UI components
+│   │   ├── common/
+│   │   │   └── Header.tsx
+│   │   ├── createEvent/
+│   │   │   └── EventForm.tsx
+│   │   ├── editEvent/
+│   │   │   └── EditEventForm.tsx
+│   │   ├── home/
+│   │   │   ├── EventCard.tsx
+│   │   │   ├── EventCardSkeleton.tsx
+│   │   │   ├── EventList.tsx
+│   │   │   └── SearchFilter.tsx
+│   │   └── myEvents/
+│   │       ├── MyEventCard.tsx
+│   │       ├── MyEventCardSkeleton.tsx
+│   │       └── MyEventList.tsx
+│   │
+│   ├── hooks/
+│   │   └── useFilteredEvents.ts    # Custom hooks
+│   │
+│   ├── lib/
+│   │   └── events.json             # Default system events
+│   │
+│   ├── stores/
+│   │   └── eventStore.ts           # State management
+│   │
+│   ├── types/
+│   │   └── event.ts                # Type definitions
+│   │
+│   └── utils/
+│       └── localEvents.ts          # LocalStorage utilities
+│
+│── .gitignore
+│── eslint.config.mjs
+│── package.json
+│── README.md
+
+⚙️ Installation
+
+Clone the repo and install dependencies:
+
+git clone https://github.com/your-username/event-management.git
+cd event-management
+npm install
+
+▶️ Running Locally
+
+Start the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+By default, the app runs at:
+👉 http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🔧 Usage
 
-## Learn More
+View Events → Go to Home (/) to see all events.
 
-To learn more about Next.js, take a look at the following resources:
+Search/Filter → Use the search bar or category dropdown.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create Event → Navigate to /create-event, fill the form, and save.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+My Events → View, edit, or delete events you created.
 
-## Deploy on Vercel
+RSVP → Click RSVP on any event to attend. Click again to cancel.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+My RSVPs → View all events you RSVP’d to at /my-rsvps.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+📦 Deployment
+
+Deploy easily on Vercel
+:
+
+npm run build
+npm start
+
+📝 Evaluation Highlights
+
+✅ Clean, modular code (components & hooks)
+
+✅ Next.js features (routing, API, dynamic routes)
+
+✅ State management via localStorage
+
+✅ UI/UX with Tailwind CSS
+
+✅ Full CRUD functionality
+
+✅ RSVP system with persistence
+
+✅ Bonus: “My RSVPs” page
+
+👨‍💻 Author
+
+Developed by Abdus Samad ✨
