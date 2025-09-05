@@ -3,6 +3,7 @@
 A mini event management app built with Next.js.
 Users can view, create, edit, delete, search, and RSVP to events.
 
+
 🚀 Features
 
 🏠 Home Page: View all events (system + user-created)
@@ -19,6 +20,7 @@ Users can view, create, edit, delete, search, and RSVP to events.
 
 🎨 Responsive design with Tailwind CSS
 
+
 🛠 Tech Stack
 
 Next.js
@@ -32,6 +34,7 @@ Tailwind CSS
 
 localStorage – Data persistence (events & RSVPs)
 
+
 ⚙️ Installation
 
 Clone the repo and install dependencies:
@@ -39,6 +42,7 @@ Clone the repo and install dependencies:
 git clone https://github.com/abdussamadse/event-management-system.git
 cd event-management-system
 npm install
+
 
 ▶️ Running Locally
 
@@ -49,6 +53,7 @@ npm run dev
 
 By default, the app runs at:
 👉 http://localhost:3000
+
 
 🔧 Usage
 
@@ -62,13 +67,14 @@ My Events → View, edit, or delete events you created.
 
 RSVP → Click RSVP on any event to attend. Click again to cancel.
 
+
 📦 Deployment
 
-Deploy easily on Vercel
-:
+Deploy easily on Vercel:
 
 npm run build
 npm start
+
 
 📝 Evaluation Highlights
 
@@ -84,7 +90,6 @@ npm start
 
 ✅ RSVP system with persistence
 
-✅ Bonus: “My RSVPs” page
 
 👨‍💻 Author
 
