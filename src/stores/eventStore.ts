@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { Event } from "@/types/event";
+import { getLocalEvents, saveLocalEvents } from "@/utils/localEvents";
 
-// Define the shape of the store
 interface EventStore {
   events: Event[];
   search: string;
@@ -30,49 +30,53 @@ export const useEventStore = create<EventStore>((set, get) => ({
   setCategory: (value) => set({ category: value }),
   setEvents: (events: Event[]) => set({ events }),
 
-  // Fetch all events
+  // Fetch both JSON (API) + localStorage
   fetchEvents: async () => {
     set({ loading: true, error: null });
     try {
+      // 1. From API (json file)
       const res = await fetch("/api/events");
       if (!res.ok) throw new Error("Failed to fetch events");
-      const data: Event[] = await res.json();
-      set({ events: data, loading: false });
+      const jsonEvents: Event[] = await res.json();
+
+      // 2. From localStorage
+      const localEvents = getLocalEvents();
+
+      // 3. Merge
+      set({ events: [...jsonEvents, ...localEvents], loading: false });
     } catch (err) {
       set({ error: (err as Error).message, loading: false });
     }
   },
 
-  // Add new event
+  // Add only to localStorage
   addEvent: async (eventData) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch("/api/events", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(eventData),
-      });
-      if (!res.ok) throw new Error("Failed to add event");
-      const newEvent: Event = await res.json();
+      const newEvent: Event = { ...eventData, id: Date.now().toString() };
+      const localEvents = getLocalEvents();
+      const updated = [...localEvents, newEvent];
+      saveLocalEvents(updated);
+
       set({ events: [...get().events, newEvent], loading: false });
     } catch (err) {
       set({ error: (err as Error).message, loading: false });
     }
   },
 
-  // Update event by ID
+  // Update only in localStorage
   updateEvent: async (eventData) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch("/api/events", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(eventData),
-      });
-      if (!res.ok) throw new Error("Failed to update event");
-      const updated: Event = await res.json();
+      const localEvents = getLocalEvents().map((e) =>
+        e.id === eventData.id ? eventData : e
+      );
+      saveLocalEvents(localEvents);
+
       set({
-        events: get().events.map((e) => (e.id === updated.id ? updated : e)),
+        events: get().events.map((e) =>
+          e.id === eventData.id ? eventData : e
+        ),
         loading: false,
       });
     } catch (err) {
@@ -80,13 +84,13 @@ export const useEventStore = create<EventStore>((set, get) => ({
     }
   },
 
-  // Delete event by ID
+  // Delete only in localStorage
   deleteEvent: async (id) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch(`/api/events?id=${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete event");
-      await res.json();
+      const localEvents = getLocalEvents().filter((e) => e.id !== id);
+      saveLocalEvents(localEvents);
+
       set({
         events: get().events.filter((e) => e.id !== id),
         loading: false,
