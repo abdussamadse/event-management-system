@@ -12,10 +12,12 @@ export default function EventList() {
   const error = useEventStore((s) => s.error);
   const events = useFilteredEvents();
 
+  // Fetch events on component mount
   useEffect(() => {
     fetchEvents();
   }, [fetchEvents]);
 
+  // Render loading state
   if (loading) {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -26,6 +28,7 @@ export default function EventList() {
     );
   }
 
+  // Render error or empty state
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!events.length) return <p className="text-gray-500">No events found.</p>;
 

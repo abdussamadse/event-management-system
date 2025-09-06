@@ -16,6 +16,7 @@ export default function MyEventCard({ event }: EventCardProps) {
   const [attendees, setAttendees] = useState<number>(0);
   const [isAttending, setIsAttending] = useState<boolean>(false);
 
+  // Handle event deletion with confirmation
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
@@ -52,15 +53,18 @@ export default function MyEventCard({ event }: EventCardProps) {
     }
   };
 
+  // Navigate to edit page
   const handleEdit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     router.push(`/edit-event/${event.id}`);
   };
 
+  // Navigate to event detail page
   const handleView = () => {
     router.push(`/events/${event.id}`);
   };
 
+  // Load RSVP data from localStorage on mount
   useEffect(() => {
     const rsvps: Record<string, number> = JSON.parse(
       localStorage.getItem("rsvps") || "{}"
@@ -72,7 +76,7 @@ export default function MyEventCard({ event }: EventCardProps) {
   }, [event.id]);
 
   const handleRSVP = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // ✅ prevent navigation on button click
+    e.stopPropagation();
 
     const rsvps: Record<string, number> = JSON.parse(
       localStorage.getItem("rsvps") || "{}"
